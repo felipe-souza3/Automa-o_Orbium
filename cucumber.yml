@@ -1,0 +1,21 @@
+---
+default: -p bdd -p qa -p env_qa -p chrome -p html -p json --publish-quiet -p retry
+#default: -p bdd -p dev -p env_dev -p chrome -p html -p json --publish-quiet -p retry
+ci: -p bdd -p qa -p env_qa -p chrome_headless -p html -p json -p xml --publish-quiet
+
+bdd: -f pretty
+dot: -f progress
+dev: ENV_TYPE=dev
+env_dev: ENV_PREFIX=dev
+hml: ENV_TYPE=hml
+env_hml: ENV_PREFIX=hml
+qa: ENV_TYPE=qa
+env_qa: ENV_PREFIX=qa
+chrome: BROWSER=chrome
+chrome_headless: BROWSER=chrome_headless
+firefox: BROWSER=firefox
+firefox_headless: BROWSER=firefox_headless
+html: -f html --out=report/report.html
+json: -f json --out=report/report.json
+xml: --format junit --out=report/junit
+retry: --retry 1

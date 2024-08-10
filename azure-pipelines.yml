@@ -1,0 +1,41 @@
+trigger:
+- main
+
+jobs:
+- job: Tests
+  container: 
+    image: 'salesforce/ubuntu_salesforce03'
+    endpoint: TicketBraRegistryA
+  
+  steps:
+
+
+  - script: |
+      env LANG=pt_BR.UTF-8
+      env LANGUAGE=pt_BR
+      env LC_ALL=pt_BR.UTF-8
+    displayName: 'Set system language'
+
+
+
+  - script: |
+      cucumber -p ci -t '@login_invalido'
+    displayName: 'Running Tests Cucumber'
+    continueOnError: true
+
+  - task: PublishPipelineArtifact@0
+    inputs:
+      targetPath: 'report'
+      artifactName: 'Report'
+    condition: succeededOrFailed()
+    displayName: 'Publish Report'
+
+  - task: PublishTestResults@2
+    inputs:
+      targetRunner: JUnit
+      testResultsFiles: 'report/junit/TEST*.xml'
+      mergeTestResults: true
+      testRunTitle: 'Automation Test Results Ruby'
+      publishRunAttachments: true
+    condition: succeededOrFailed()
+    continueOnError: true
